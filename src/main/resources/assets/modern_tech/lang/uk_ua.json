@@ -1,0 +1,6 @@
+{
+  "block.modern_tech.me_inventory_connector": "МЕ-з'єднувач інвентарів",
+  "tooltip.modern_tech.me_inventory_connector": "Під'єднує сусідні інвентарі (через обрамлення) до МЕ-мережі як сховище. Потребує каналу.",
+  "chat.modern_tech.me_inventory_connector.usage": "Зайнято слотів: %s/%s, інвентарів: %s, типів предметів: %s",
+  "chat.modern_tech.me_inventory_connector.usage_offline": "Не в мережі (немає живлення або каналу). Зайнято слотів: %s/%s, інвентарів: %s, типів предметів: %s"
+}

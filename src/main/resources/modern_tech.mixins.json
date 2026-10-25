@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.ledok.moderntech.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "BlockEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
