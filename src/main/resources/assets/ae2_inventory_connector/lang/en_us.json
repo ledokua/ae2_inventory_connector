@@ -1,0 +1,6 @@
+{
+  "block.ae2_inventory_connector.me_inventory_connector": "ME Inventory Connector",
+  "tooltip.ae2_inventory_connector.me_inventory_connector": "Connects nearby inventories (through trims) to the ME network as storage. Needs a channel.",
+  "chat.ae2_inventory_connector.me_inventory_connector.usage": "Slots used: %s/%s, inventories: %s, item types: %s",
+  "chat.ae2_inventory_connector.me_inventory_connector.usage_offline": "Offline (no power or channel). Slots used: %s/%s, inventories: %s, item types: %s"
+}

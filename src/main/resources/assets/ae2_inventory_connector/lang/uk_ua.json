@@ -1,0 +1,6 @@
+{
+  "block.ae2_inventory_connector.me_inventory_connector": "МЕ-з'єднувач інвентарів",
+  "tooltip.ae2_inventory_connector.me_inventory_connector": "Під'єднує сусідні інвентарі (через обрамлення) до МЕ-мережі як сховище. Потребує каналу.",
+  "chat.ae2_inventory_connector.me_inventory_connector.usage": "Зайнято слотів: %s/%s, інвентарів: %s, типів предметів: %s",
+  "chat.ae2_inventory_connector.me_inventory_connector.usage_offline": "Не в мережі (немає живлення або каналу). Зайнято слотів: %s/%s, інвентарів: %s, типів предметів: %s"
+}

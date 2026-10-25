@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "IBI",
+    "CPC",
+    "IBI"
+  ],
+  "key": {
+    "I": { "tag": "c:ingots/iron" },
+    "B": { "item": "ae2:storage_bus" },
+    "C": { "tag": "c:chests/wooden" },
+    "P": { "item": "ae2:engineering_processor" }
+  },
+  "result": { "id": "ae2_inventory_connector:me_inventory_connector", "count": 1 }
+}

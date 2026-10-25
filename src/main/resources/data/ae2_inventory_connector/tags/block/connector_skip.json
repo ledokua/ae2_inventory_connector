@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    "ae2_inventory_connector:me_inventory_connector",
+    { "id": "#toms_storage:inventory_connector_skip", "required": false },
+    { "id": "toms_storage:inventory_connector", "required": false },
+    { "id": "toms_storage:inventory_cable_connector", "required": false },
+    { "id": "toms_storage:inventory_cable_connector_framed", "required": false },
+    { "id": "toms_storage:inventory_proxy", "required": false },
+    { "id": "toms_storage:inventory_interface", "required": false },
+    { "id": "ae2:cable_bus", "required": false },
+    { "id": "ae2:interface", "required": false },
+    { "id": "ae2:pattern_provider", "required": false },
+    { "id": "ae2:me_chest", "required": false },
+    { "id": "ae2:drive", "required": false },
+    { "id": "ae2:io_port", "required": false }
+  ]
+}
