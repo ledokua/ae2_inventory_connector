@@ -6,6 +6,7 @@
     { "id": "toms_storage:inventory_connector", "required": false },
     { "id": "toms_storage:inventory_cable_connector", "required": false },
     { "id": "toms_storage:inventory_cable_connector_framed", "required": false },
+    { "id": "toms_storage:inventory_cable_connector_filtered", "required": false },
     { "id": "toms_storage:inventory_proxy", "required": false },
     { "id": "toms_storage:inventory_interface", "required": false },
     { "id": "ae2:cable_bus", "required": false },

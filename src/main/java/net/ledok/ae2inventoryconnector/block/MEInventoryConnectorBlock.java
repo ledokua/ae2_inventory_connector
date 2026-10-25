@@ -58,6 +58,8 @@ public class MEInventoryConnectorBlock extends BaseEntityBlock {
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
             BlockHitResult hit) {
         if (!level.isClientSide && level.getBlockEntity(pos) instanceof MEInventoryConnectorBlockEntity be) {
+            // Right-click also rescans: a manual fix for blocks changed without block updates (e.g. WorldEdit).
+            be.getInventories().markTopologyDirty();
             var u = be.getInventories().usage();
             var key = be.getMainNode().isActive()
                     ? "chat.ae2_inventory_connector.me_inventory_connector.usage"

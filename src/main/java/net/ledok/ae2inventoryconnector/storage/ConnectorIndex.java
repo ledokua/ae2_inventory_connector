@@ -21,6 +21,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
@@ -149,6 +150,24 @@ public final class ConnectorIndex {
         bus.addListener(ConnectorIndex::onServerTick);
         bus.addListener(ConnectorIndex::onLevelUnload);
         bus.addListener(ConnectorIndex::onServerStopped);
+        bus.addListener(ConnectorIndex::onDatapackSync);
+    }
+
+    /** Rescan every loaded connector at the end of the tick (config or tags changed). */
+    public static void rescanAll() {
+        for (var index : LEVELS.values()) {
+            for (var set : index.owned.keySet()) {
+                set.markTopologyDirty();
+            }
+        }
+    }
+
+    /** Posted at the end of /reload with no player (joins carry one): tags may have changed. */
+    private static void onDatapackSync(OnDatapackSyncEvent event) {
+        if (event.getPlayer() == null) {
+            Config.reloadBlacklist();
+            rescanAll();
+        }
     }
 
     /** Called from the BlockEntity#setChanged mixin, i.e. very often: keep the miss path trivial. */

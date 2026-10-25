@@ -221,7 +221,7 @@ public final class InventorySet {
         if (state.is(ModTags.TRIMS)) {
             return Kind.TRIM;
         }
-        if (state.is(ModTags.CONNECTOR_SKIP)) {
+        if (state.is(ModTags.CONNECTOR_SKIP) || Config.blacklist().contains(state)) {
             return Kind.NONE;
         }
         return level.getCapability(Capabilities.ItemHandler.BLOCK, pos, side) != null ? Kind.INVENTORY : Kind.NONE;
