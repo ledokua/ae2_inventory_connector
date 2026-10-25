@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": ["LeDok"],
+  "contact": {
+    "sources": "https://github.com/ledokua/ae2_inventory_connector",
+    "issues": "https://github.com/ledokua/ae2_inventory_connector/issues"
+  },
+  "license": "MIT",
+  "icon": "assets/${mod_id}/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["net.ledok.ae2inventoryconnector.fabric.AE2InventoryConnectorFabric"]
+  },
+  "mixins": ["${mod_id}.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.14.21",
+    "fabric-api": "*",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "ae2": ">=15.0.0"
+  },
+  "suggests": {
+    "toms_storage": "*"
+  }
+}

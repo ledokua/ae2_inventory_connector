@@ -1,0 +1,29 @@
+// Loader-agnostic code: vanilla Minecraft (Mojmap) + the AE2 API, which is identical on both loaders.
+// Loader glue lives in ../fabric and ../forge.
+plugins {
+    id 'fabric-loom'
+}
+
+base {
+    archivesName = "${rootProject.archives_base_name}-common"
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modCompileOnly "net.fabricmc:fabric-loader:${rootProject.loader_version}"
+    // Only the loader-neutral appeng.api.* classes may be used from common code.
+    modCompileOnly("appeng:appliedenergistics2-fabric:${rootProject.ae2_version}") { transitive = false }
+    // Not for use in common code (no net.fabricmc imports here). Loom needs it to remap AE2: without it
+    // AE2 calls through Fabric API subclasses (FabricItemSettings) stay unmapped, and since the remapped
+    // jar is cached for the whole build, the Fabric dev runtime crashes with NoSuchMethodError.
+    modCompileOnly "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_version}"
+    // AEItemKey.of(...) has a Fabric-only overload; keep calling it from loader glue, not from common.
+}
+
+loom {
+    runs {
+        client { ideConfigGenerated = false }
+        server { ideConfigGenerated = false }
+    }
+}

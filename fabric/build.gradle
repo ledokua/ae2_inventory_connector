@@ -1,0 +1,54 @@
+// Fabric glue: entrypoint, Fabric API events, Transfer API inventory access.
+plugins {
+    id 'fabric-loom'
+}
+
+base {
+    archivesName = "${rootProject.archives_base_name}-fabric"
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_version}"
+    modImplementation("appeng:appliedenergistics2-fabric:${rootProject.ae2_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+
+    // AE2 ships this jar-in-jar; dev runs need it on the classpath.
+    modLocalRuntime "teamreborn:energy:3.0.0"
+
+    implementation project(path: ':common', configuration: 'namedElements')
+}
+
+loom {
+    runs {
+        client { ideConfigGenerated = true; runDir = "run" }
+        server { ideConfigGenerated = true; runDir = "run-server" }
+    }
+}
+
+def commonSourceSet = project(':common').sourceSets.main
+
+processResources {
+    from commonSourceSet.resources
+    def props = [version: project.version, minecraft_version: rootProject.minecraft_version,
+                 loader_version: rootProject.loader_version, ae2_version: rootProject.ae2_version,
+                 mod_id: rootProject.mod_id, mod_name: rootProject.mod_name,
+                 mod_description: rootProject.mod_description]
+    inputs.properties props
+    filteringCharset "UTF-8"
+    filesMatching("fabric.mod.json") {
+        expand props
+    }
+}
+
+jar {
+    from commonSourceSet.output.classesDirs
+    from(rootProject.file("LICENSE.txt")) { rename { "${it}_${rootProject.archives_base_name}" } }
+}
+
+sourcesJar {
+    from commonSourceSet.allSource
+}

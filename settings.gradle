@@ -1,13 +1,17 @@
 pluginManagement {
     repositories {
-        mavenLocal()
+        maven { name = 'Fabric'; url = 'https://maven.fabricmc.net/' }
+        maven { name = 'NeoForged'; url = 'https://maven.neoforged.net/releases/' }
         gradlePluginPortal()
-        maven { url = 'https://maven.neoforged.net/releases' }
     }
 }
 
 plugins {
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+    // MDG's legacy Forge tooling needs a JDK 17; Gradle downloads one if it isn't installed.
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
 
 rootProject.name = 'ae2_inventory_connector'
+include 'common'
+include 'fabric'
+include 'forge'

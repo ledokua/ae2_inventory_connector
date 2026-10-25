@@ -1,79 +1,29 @@
 plugins {
-    id 'java-library'
-    id 'idea'
-    id 'net.neoforged.moddev' version '2.0.141'
+    id 'fabric-loom' version '1.17-SNAPSHOT' apply false
+    id 'net.neoforged.moddev.legacyforge' version '2.0.144' apply false
 }
 
-version = mod_version
-group = mod_group_id
+subprojects {
+    apply plugin: 'java'
 
-repositories {
-    mavenLocal()
-    maven {
-        url "https://cursemaven.com"
-        content { includeGroup "curse.maven" }
-    }
-    maven {
-        name = "Modrinth"
-        url = "https://api.modrinth.com/maven"
-        content { includeGroup "maven.modrinth" }
-    }
-    mavenCentral()
-}
+    version = rootProject.mod_version
+    group = rootProject.maven_group
 
-base {
-    archivesName = "${mod_id}-${minecraft_version}"
-}
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
-
-neoForge {
-    version = project.neo_version
-
-    runs {
-        client {
-            client()
-        }
-        server {
-            server()
-            programArgument '--nogui'
-        }
-        configureEach {
-            logLevel = org.slf4j.event.Level.INFO
-        }
+    repositories {
+        // AE2 for both loaders
+        maven { name = 'ModMaven'; url = 'https://modmaven.dev/' }
+        mavenCentral()
     }
 
-    mods {
-        "${mod_id}" {
-            sourceSet(sourceSets.main)
-        }
+    // 1.20.1 is a Java 17 game: emit Java 17 bytecode against the Java 17 API (--release), built and run with
+    // a JDK 21 toolchain (Forge 47.4 and Fabric both run 1.20.1 on 21; no JDK 17 needed on the dev machine).
+    tasks.withType(JavaCompile).configureEach {
+        it.options.encoding = "UTF-8"
+        it.options.release.set(17)
+    }
+
+    java {
+        toolchain.languageVersion = JavaLanguageVersion.of(21)
+        withSourcesJar()
     }
 }
-
-dependencies {
-    // AE2 19.2.17 for 1.21.1
-    implementation "curse.maven:applied-energistics-2-223794:7027323"
-    runtimeOnly "org.appliedenergistics:guideme:21.1.1"
-}
-
-var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
-    var replaceProperties = [minecraft_version      : minecraft_version,
-                             minecraft_version_range: minecraft_version_range,
-                             neo_version            : neo_version,
-                             neo_version_range      : neo_version_range,
-                             loader_version_range   : loader_version_range,
-                             mod_id                 : mod_id,
-                             mod_name               : mod_name,
-                             mod_license            : mod_license,
-                             mod_version            : mod_version,
-                             mod_authors            : mod_authors,
-                             mod_description        : mod_description]
-    inputs.properties replaceProperties
-    expand replaceProperties
-    from "src/main/templates"
-    into "build/generated/sources/modMetadata"
-}
-
-sourceSets.main.resources.srcDir generateModMetadata
-neoForge.ideSyncTask generateModMetadata
-

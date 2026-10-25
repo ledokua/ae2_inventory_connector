@@ -1,0 +1,81 @@
+// Forge glue: @Mod entrypoint, Forge events, IItemHandler inventory access.
+// Forge 1.20.1 runs on SRG names, so the common sources are compiled (and reobfuscated) here instead of
+// consuming common's Loom jar, and the mixins get a refmap from the mixin annotation processor.
+plugins {
+    id 'net.neoforged.moddev.legacyforge'
+}
+
+base {
+    archivesName = "${rootProject.archives_base_name}-forge"
+}
+
+def commonSourceSet = project(':common').sourceSets.main
+
+// Dev runs use build/classes/java/main as the mod root; put resources there too so Forge sees the
+// META-INF/MANIFEST.MF (MixinConfigs), mods.toml and assets from one place.
+sourceSets.main.output.resourcesDir = sourceSets.main.java.destinationDirectory
+
+legacyForge {
+    version = rootProject.forge_version
+
+    runs {
+        client {
+            client()
+            gameDirectory = project.file('run')
+        }
+        server {
+            server()
+            gameDirectory = project.file('run-server')
+            programArgument '--nogui'
+        }
+    }
+
+    mods {
+        "${rootProject.mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+mixin {
+    add sourceSets.main, "${rootProject.mod_id}.refmap.json"
+    // No `config` here: it adds --mixin.config, which Mixin resolves before Forge has the mod folders on a
+    // classloader ("resource ... could not be read"). Forge reads MixinConfigs from the manifest instead:
+    // src/main/resources/META-INF/MANIFEST.MF in dev, the jar manifest below in production.
+}
+
+dependencies {
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    modImplementation "appeng:appliedenergistics2-forge:${rootProject.ae2_version}"
+    // AE2's required guidebook library, only needed to start dev runs.
+    modRuntimeOnly "org.appliedenergistics:guideme:20.1.14"
+}
+
+tasks.named('compileJava', JavaCompile) {
+    source commonSourceSet.java
+}
+
+processResources {
+    // Fabric's mixin config has no refmap; Forge uses its own copy (see mixin {} above).
+    from(commonSourceSet.resources) { exclude "${rootProject.mod_id}.mixins.json" }
+    def props = [version: project.version, minecraft_version: rootProject.minecraft_version,
+                 ae2_version: rootProject.ae2_version, mod_id: rootProject.mod_id,
+                 mod_name: rootProject.mod_name, mod_description: rootProject.mod_description]
+    inputs.properties props
+    filteringCharset "UTF-8"
+    filesMatching("META-INF/mods.toml") {
+        expand props
+    }
+}
+
+jar {
+    // Forge 1.20.1 finds mixin configs through the manifest (mods.toml has no [[mixins]] yet). The dev-only
+    // resource copy is dropped so it can't clash with the generated manifest.
+    manifest.attributes('MixinConfigs': "${rootProject.mod_id}.forge.mixins.json")
+    exclude 'META-INF/MANIFEST.MF'
+    from(rootProject.file("LICENSE.txt")) { rename { "${it}_${rootProject.archives_base_name}" } }
+}
+
+sourcesJar {
+    from commonSourceSet.allSource
+}

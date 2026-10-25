@@ -1,0 +1,2 @@
+Manifest-Version: 1.0
+MixinConfigs: ae2_inventory_connector.forge.mixins.json
